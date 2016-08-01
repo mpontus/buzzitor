@@ -1,7 +1,7 @@
 Rpush.configure do |config|
 
   # Supported clients are :active_record, :redis and :mongoid
-  config.client = :active_record
+  config.client = :redis
 
   # Options passed to Redis.new
   # config.redis_options = {}

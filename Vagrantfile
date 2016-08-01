@@ -20,8 +20,7 @@ Vagrant.configure("2") do |config|
       rbenv: {
         rubies: [ '2.3.1' ],
         global: '2.3.1',
-        gems: { '2.3.1' => [{ 'name' => 'bundler' },
-                            { 'name' => 'foreman' }]}
+        gems: { '2.3.1' => [{ 'name' => 'bundler' }]}
       }
     }
   end

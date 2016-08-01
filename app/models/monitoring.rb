@@ -1,0 +1,2 @@
+class Monitoring < ApplicationRecord
+end

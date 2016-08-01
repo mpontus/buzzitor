@@ -31,6 +31,7 @@ gem 'capistrano-rails', group: :development
 
 # Use RPush to send Push Notifications
 gem 'rpush'
+gem 'rpush-redis'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

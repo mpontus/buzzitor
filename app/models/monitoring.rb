@@ -4,6 +4,12 @@ class Monitoring < ApplicationRecord
     FetchJob.perform_later self
   end
 
+  before_save do
+    if content_changed? or error_changed? then
+      self.fetched_at = Time.now
+    end
+  end
+
   def fetch
     { content: Net::HTTP.get(URI(address)),
       error: nil }

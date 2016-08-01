@@ -26,7 +26,7 @@ class Monitoring < ApplicationRecord
                      { treshold: 30.seconds.ago })
       .order(fetched_at: :asc)
       .find_each do |monitoring|
-      content = HTTP.get(monitoring.address)
+      content = Net::HTTP.get(URI(monitoring.address))
       if monitoring.content != content
         monitoring.notify_subscriber
       end

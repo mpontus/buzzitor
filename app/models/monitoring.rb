@@ -22,8 +22,8 @@ class Monitoring < ApplicationRecord
   end
 
   def self.batch_processing
-    Monitoring.where("endpoint IS NOT NULL AND fetched_at < :treshold",
-                     { treshold: 1.seconds.ago })
+    Monitoring.where("endpoint IS NOT NULL AND fetched_at < :threshold",
+                     { threshold: 1.seconds.ago })
       .order(fetched_at: :asc)
       .all.each do |monitoring|
       content = Net::HTTP.get(URI(monitoring.address))

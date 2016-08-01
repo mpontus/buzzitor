@@ -1,6 +1,19 @@
 class Monitoring < ApplicationRecord
 
-  after_create :initial_fetch
+  after_create do
+    FetchJob.perform_later self
+  end
+
+  def fetch
+    { content: Net::HTTP.get(URI(address)),
+      error: nil }
+  rescue => e
+    byebug
+  end
+
+  def fetch!
+    update_attributes self.fetch
+  end
 
   def self.batch_processing
     Monitoring.where("endpoint IS NOT NULL AND fetched_at < :treshold",
@@ -38,13 +51,5 @@ class Monitoring < ApplicationRecord
     Rpush.push
   end
 
-  private
-
-  def initial_fetch
-    self.content = HTTP.get(url)
-    self.error = nil
-  rescue HTTP::Error
-    byebug
-  end
 
 end

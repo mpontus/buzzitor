@@ -25,7 +25,7 @@ class Monitoring < ApplicationRecord
     Monitoring.where("endpoint IS NOT NULL AND fetched_at < :treshold",
                      { treshold: 30.seconds.ago })
       .order(fetched_at: :asc)
-      .find_each do |monitoring|
+      .all.each do |monitoring|
       content = Net::HTTP.get(URI(monitoring.address))
       if monitoring.content != content
         monitoring.notify_subscriber

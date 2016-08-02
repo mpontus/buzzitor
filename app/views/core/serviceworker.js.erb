@@ -1,11 +1,17 @@
 console.log('[Service Worker] Hello world!');
-self.addEventListener('install', function onInstall(event) {
+self.addEventListener('push', function(event) {
+  console.log('Received a push message', event);
+
+  var title = 'Yay a message.';
+  var body = 'We have received a push message.';
+  var icon = '/images/icon-192x192.png';
+  var tag = 'simple-push-demo-notification-tag';
+
   event.waitUntil(
-    caches.open('cached-assets').then(function prefill(cache) {
-      return cache.addAll([
-        '<%= asset_path "application.js" %>',
-        '<%= asset_path "application.css" %>',
-      ]);
+    self.registration.showNotification(title, {
+      body: body,
+      icon: icon,
+      tag: tag
     })
   );
 });

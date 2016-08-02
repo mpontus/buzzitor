@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require_tree .
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('serviceworker.js').then(initialiseState);

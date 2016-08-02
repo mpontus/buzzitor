@@ -9,6 +9,7 @@ Bundler.require(*Rails.groups)
 module Buzzitor
   class Application < Rails::Application
     config.generators do |g|
+      g.javascript_engine :js
       g.test_framework    :rspec
     end
   end

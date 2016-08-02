@@ -39,6 +39,9 @@ group :development, :test do
 
   # Load environment variables
   gem 'dotenv-rails'
+
+  # Use rspec for BDD
+  gem 'rspec-rails'
 end
 
 group :development do

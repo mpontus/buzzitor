@@ -60,7 +60,7 @@ function initialiseState() {
 
 function subscribe() {
   navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-    serviceWorkerRegistration.pushManager.subscribe()
+    serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
       .then(function(subscription) {
         sendSubscriptionToServer(subscription);
       })

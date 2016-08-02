@@ -133,3 +133,11 @@ Rpush.reflect do |on|
   # on.error do |error|
   # end
 end
+
+if !Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
+  app = Rpush::Gcm::App.new
+  app.name = "android_app"
+  app.auth_key = ENV['BUZZITOR_GCM_PUBLIC_API_KEY']
+  app.connections = 1
+  app.save!
+end

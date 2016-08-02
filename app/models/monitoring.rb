@@ -35,14 +35,6 @@ class Monitoring < ApplicationRecord
   end
 
   def notify_subscriber
-    if !Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
-      app = Rpush::Gcm::App.new
-      app.name = "android_app"
-      app.auth_key = "AIzaSyDBj_VRWQ66MP3VjulFopkPziVaBgwPkTw"
-      app.connections = 1
-      app.save!
-    end
-
     n = Rpush::Gcm::Notification.new
     n.app = Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
     n.registration_ids = [ self.endpoint ]

@@ -35,9 +35,11 @@ class Monitoring < ApplicationRecord
   end
 
   def notify_subscriber
+    return if endpoint.nil?
+    registration_id = File.basename(URI(endpoint).path)
     n = Rpush::Gcm::Notification.new
     n.app = Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
-    n.registration_ids = [ self.endpoint ]
+    n.registration_ids = [ registration_id ]
     n.priority = 'high'
     n.content_available = true
     n.notification = {

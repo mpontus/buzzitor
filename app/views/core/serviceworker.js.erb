@@ -1,0 +1,11 @@
+console.log('[Service Worker] Hello world!');
+self.addEventListener('install', function onInstall(event) {
+  event.waitUntil(
+    caches.open('cached-assets').then(function prefill(cache) {
+      return cache.addAll([
+        '<%= asset_path "application.js" %>',
+        '<%= asset_path "application.css" %>',
+      ]);
+    })
+  );
+});

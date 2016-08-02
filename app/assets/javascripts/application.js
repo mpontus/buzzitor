@@ -15,7 +15,7 @@
 //= require turbolinks
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('service-worker.js').then(initialiseState);
+  navigator.serviceWorker.register('serviceworker.js').then(initialiseState);
 } else {
   console.warn("Service workers aren't supported in this browser");
 }

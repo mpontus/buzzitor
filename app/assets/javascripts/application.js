@@ -13,7 +13,32 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require js-routes
 //= require_tree .
+
+(function() {
+  this.App || (this.App = {});
+  this.App.Monitoring = {
+    init: function (id) {
+      this.obj = {};
+      var url = Routes.monitoring_path(id, {format: 'json'});
+      var poll = function () {
+        setTimeout(function () {
+          $.get(url).then( function (obj) {
+            if (obj != this.obj) {
+              this.obj = obj;
+              iframe = $('iframe').attr(src, obj.content_url);
+              $('#preview').children().remove();
+              $('#preview').append(iframe);
+            }
+            poll();
+          });
+        }, 1000);
+      }
+      poll();
+    }
+  }
+}).call(this);
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/serviceworker.js').then(initialiseState);

@@ -33,6 +33,9 @@ gem 'capistrano-rails', group: :development
 gem 'rpush'
 gem 'rpush-redis'
 
+# Export routes to javascript
+gem 'js-routes'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri

@@ -21,7 +21,9 @@ module Monitoring
     end
 
     def fetch!
-      update_attributes self.fetch
+      result = fetch
+      self.results << Monitoring::Result.new(content: result.content)
+      save!
     end
 
     def self.batch_processing

@@ -8,4 +8,12 @@ RSpec.describe Monitoring::Context, type: :model do
     context.save!
     expect(context.reload.results.first).to eq(result)
   end
+
+  it "will fetch page and save it as a result" do
+    context = Monitoring::Context.new(url: "http://example.org")
+    expect {
+      context.fetch!
+    }.to change(context.results.length).from(0).to(1)
+  end
+
 end

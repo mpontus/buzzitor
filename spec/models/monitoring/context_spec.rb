@@ -13,7 +13,7 @@ RSpec.describe Monitoring::Context, type: :model do
     context = Monitoring::Context.new(url: "http://example.org")
     expect {
       context.fetch!
-    }.to change(context.results.length).from(0).to(1)
+    }.to change(context.results, :length).by(1)
   end
 
 end

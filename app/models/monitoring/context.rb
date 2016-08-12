@@ -22,7 +22,7 @@ module Monitoring
 
     def fetch!
       result = fetch
-      self.results << Monitoring::Result.new(content: result.content)
+      self.results << Monitoring::Result.new(content: result[:content])
       save!
     end
 

@@ -3,9 +3,6 @@ module Monitoring
 
     has_many :results
 
-    alias_attribute :url, :address_url
-    alias_attribute :endpoint, :subscriber_endpoint
-
     after_create do
       FetchJob.perform_later self
     end

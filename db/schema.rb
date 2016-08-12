@@ -13,20 +13,20 @@
 ActiveRecord::Schema.define(version: 20160812161547) do
 
   create_table "monitoring_contexts", force: :cascade do |t|
-    t.string   "url"
-    t.string   "endpoint"
+    t.string   "address_url"
+    t.string   "subscriber_endpoint"
     t.datetime "fetched_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
   create_table "monitoring_results", force: :cascade do |t|
-    t.integer  "monitoring_context_id"
+    t.integer  "context_id"
     t.binary   "content"
     t.integer  "error_code"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-    t.index ["monitoring_context_id"], name: "index_monitoring_results_on_monitoring_context_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["context_id"], name: "index_monitoring_results_on_context_id"
   end
 
 end

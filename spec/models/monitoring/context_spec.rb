@@ -6,7 +6,6 @@ RSpec.describe Monitoring::Context, type: :model do
     context = Monitoring::Context.new(url: "http://example.org/")
     context.results << result
     context.save!
-    context.reload!
-    expect(context.results.first).to eq(result)
+    expect(context.reload.results.first).to eq(result)
   end
 end

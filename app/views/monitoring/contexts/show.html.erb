@@ -1,0 +1,7 @@
+<p>
+  Monitoring Url: <%= @monitoring_context.url %>
+</p>
+<div id="preview"></div>
+<script>
+     App.Monitoring.init("<%= @monitoring_context.id %>");
+</script>

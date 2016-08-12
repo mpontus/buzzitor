@@ -21,7 +21,7 @@
   this.App.Monitoring = {
     init: function (id) {
       this.obj = {};
-      var url = Routes.monitoring_path(id, {format: 'json'});
+      var url = Routes.monitoring_context_path(id, {format: 'json'});
       var poll = function () {
         setTimeout(function () {
           $.get(url).then( function (obj) {

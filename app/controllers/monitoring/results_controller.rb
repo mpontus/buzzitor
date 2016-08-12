@@ -1,6 +1,8 @@
 class Monitoring::ResultsController < ApplicationController
+  before_action :set_monitoring, only: [:show, :edit, :update, :destroy]
+
   def show
-    render html: @monitoring_result.content
+    render text: @monitoring_result.content
   end
 
   private

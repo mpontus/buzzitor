@@ -83,5 +83,4 @@ function subscribe() {
 
 function sendSubscriptionToServer(subscription) {
   console.log("The user has successfully subscribed", subscription.endpoint);
-  alert(subscription.endpoint);
 }

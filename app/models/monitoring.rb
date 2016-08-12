@@ -1,17 +1,20 @@
 class Monitoring < ApplicationRecord
 
+  alias_attribute :url, :address_url
+  alias_attribute :endpoint, :subscriber_endpoint
+
   after_create do
     FetchJob.perform_later self
   end
 
-  before_save do
-    if content_changed? or error_changed? then
-      self.fetched_at = Time.now
-    end
-  end
+  # before_save do
+  #   if content_changed? or error_changed? then
+  #     self.fetched_at = Time.now
+  #   end
+  # end
 
   def fetch
-    { content: Net::HTTP.get(URI(address)),
+    { content: Net::HTTP.get(URI(url)),
       error: nil }
   rescue => e
     byebug
@@ -26,7 +29,7 @@ class Monitoring < ApplicationRecord
                      { threshold: 1.seconds.ago })
       .order(fetched_at: :asc)
       .all.each do |monitoring|
-      content = Net::HTTP.get(URI(monitoring.address))
+      content = Net::HTTP.get(URI(monitoring.url))
       if monitoring.content != content
         monitoring.notify_subscriber
       end

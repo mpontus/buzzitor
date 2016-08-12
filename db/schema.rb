@@ -13,13 +13,13 @@
 ActiveRecord::Schema.define(version: 20160801162914) do
 
   create_table "monitorings", force: :cascade do |t|
-    t.string   "url"
-    t.string   "endpoint"
-    t.binary   "content"
-    t.string   "error"
+    t.string   "address_url"
+    t.string   "subscriber_endpoint"
+    t.binary   "content_url"
+    t.string   "error_code"
     t.datetime "fetched_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
   end
 
 end

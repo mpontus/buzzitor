@@ -4,7 +4,11 @@ class Monitoring::Context < ApplicationRecord
   has_many :subscribers
 
   after_create do
-    FetchJob.perform_later self
+    if Rails.const_defined? 'Server'
+      FetchJob.perform_later self
+    else
+      FetchJob.perform_now self
+    end
   end
 
   # before_save do

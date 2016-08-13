@@ -20,8 +20,6 @@ class Monitoring::Context < ApplicationRecord
   def fetch
     { content: Net::HTTP.get(URI(url)),
       error: nil }
-  rescue => e
-    byebug
   end
 
   def fetch!

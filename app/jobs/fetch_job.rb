@@ -1,11 +1,11 @@
 class FetchJob < ApplicationJob
   queue_as :default
 
-  def perform(monitoring)
-    is_initial = monitoring.results.empty?
-    monitoring.fetch!
+  def perform(context)
+    is_initial = context.results.empty?
+    context.fetch!
     if is_initial
-      monitoring.subscribers.each &:notify_initial
+      context.subscribers.each do &:notify
     end
   end
 end

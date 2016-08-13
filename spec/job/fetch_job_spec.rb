@@ -2,9 +2,12 @@ require 'rails_helper'
 require 'webmock/rspec'
 
 RSpec.describe FetchJob, type: :job do
-  it "should notify subscribers upon completion" do
+  before do
     stub_request(:get, "http://example.org/")
       .to_return body: '<!doctype html><html><head><title>Example Domain</title></head><body>Hello world!</body></html>'
+  end
+
+  it "should notify subscribers upon completion" do
     stub_request(:post, "https://gcm-http.googleapis.com/gcm/send")
       .to_return body: '{"multicast_id":8137295278192253139,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1471114573740287%faa30396faa30396"}]}'
 

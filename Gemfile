@@ -45,6 +45,9 @@ group :development, :test do
 
   # Use rspec for BDD
   gem 'rspec-rails'
+
+  # Mock web requests
+  gem 'webmock'
 end
 
 group :development do

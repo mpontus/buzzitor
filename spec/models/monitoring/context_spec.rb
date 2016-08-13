@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Monitoring::Context, type: :model do
+  it "enqueues FetchJob" do
+    context = Monitoring::Context.new(url: "http://example.org/")
+    expect {
+      context.save!
+    }.to have_enqueued_job(FetchJob).with(context)
+  end
+
   it "has many results" do
     result = Monitoring::Result.new(content: "foobar")
     context = Monitoring::Context.new(url: "http://example.org/")

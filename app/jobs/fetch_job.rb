@@ -5,7 +5,7 @@ class FetchJob < ApplicationJob
     is_initial = context.results.empty?
     context.fetch!
     if is_initial
-      context.subscribers.each do &:notify
+      context.subscribers.each &:notify
     end
   end
 end

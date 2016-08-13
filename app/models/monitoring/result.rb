@@ -1,5 +1,3 @@
-module Monitoring
-  class Result < ApplicationRecord
-    belongs_to :context
-  end
+class Monitoring::Result < ApplicationRecord
+  belongs_to :context
 end

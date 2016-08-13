@@ -10,11 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160812161547) do
+ActiveRecord::Schema.define(version: 20160813120236) do
 
   create_table "monitoring_contexts", force: :cascade do |t|
     t.string   "url"
-    t.string   "endpoint"
     t.datetime "fetched_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -27,6 +26,13 @@ ActiveRecord::Schema.define(version: 20160812161547) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["context_id"], name: "index_monitoring_results_on_context_id"
+  end
+
+  create_table "monitoring_subscribers", force: :cascade do |t|
+    t.integer "context_id"
+    t.string  "endpoint",   null: false
+    t.index ["context_id"], name: "index_monitoring_subscribers_on_context_id"
+    t.index ["endpoint"], name: "index_monitoring_subscribers_on_endpoint", unique: true
   end
 
 end

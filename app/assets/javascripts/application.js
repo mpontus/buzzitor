@@ -17,8 +17,19 @@
 //= require_tree .
 
 (function() {
+  var self = this;
   this.App || (this.App = {});
   this.App.Monitoring = {
+    init: function (id) {
+      self.App.MonitoringPreview.init(id);
+      self.App.MonitoringSubscription.init(id);
+    }
+  }
+}).call(this);
+
+(function() {
+  this.App || (this.App = {});
+  this.App.MonitoringPreview = {
     init: function (id) {
       this.obj = {};
       var url = Routes.monitoring_context_path(id, {format: 'json'});
@@ -29,11 +40,11 @@
             if (content !== null) {
               if (content.status === 'content') {
                 if ((!this.obj) || (this.obj.latest_content.url !== content.url)) {
-                  console.log(content.url);
                   var iframe = $('<iframe>').attr('src', content.url);
                   $('#preview').children().remove();
                   $('#preview').append(iframe);
                   this.obj = obj;
+                  return;
                 }
               }
             }
@@ -46,72 +57,92 @@
   }
 }).call(this);
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/serviceworker.js').then(initialiseState);
-} else {
-  console.warn("Service workers aren't supported in this browser");
-}
-
-// Once the service worker is registered set the initial state
-function initialiseState() {
-  // Are notifications supported in the service worker?
-  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-    console.warn("Notifications aren't supported");
-    return;
+(function() {
+  this.App || (this.App = {});
+  this.App.MonitoringSubscription = {
+    init: function (id) {
+      obtainSubscription()
+        .then(function (subscription) {
+          var url = Routes.monitoring_subscribers_path(id, {format: 'json'});
+          $.post(url, {endpoint: subscription.endpoint});
+        })
+        .catch(function (error) {
+          console.warn(error);
+        });
+    }
   }
 
-  // Check the notification permission. If its denied, its a permanent block
-  // until the user changes the permission
-  if (Notification.permission === 'denied') {
-    console.warn("The user has blocked notifications");
-    return;
-  }
+  function obtainSubscription() {
+    return new Promise(function (resolve, reject) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/serviceworker.js').then(initialiseState);
+      } else {
+        reject("Service workers aren't supported in this browser");
+      }
 
-  // Check if push messaging is supported
-  if (!('PushManager' in window)) {
-    console.warn("Push messaging isn't supported");
-    return;
-  }
-
-  // We need the service worker registration to check for a subscription
-  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-    // Do we already have a push message subscription?
-    serviceWorkerRegistration.pushManager.getSubscription()
-      .then(function(subscription) {
-        if (subscription) {
-          sendSubscriptionToServer(subscription);
-        } else {
-          subscribe();
+      // Once the service worker is registered set the initial state
+      function initialiseState() {
+        // Are notifications supported in the service worker?
+        if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+          reject("Notifications aren't supported");
+          return;
         }
-      })
-      .catch(function(err) {
-        console.warn("Error during getSubscription()", err);
-      });
-  });
-}
 
-function subscribe() {
-  navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-    serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
-      .then(function(subscription) {
-        sendSubscriptionToServer(subscription);
-      })
-      .catch(function (err) {
+        // Check the notification permission. If its denied, its a permanent block
+        // until the user changes the permission
         if (Notification.permission === 'denied') {
-          // The user denied the notification permission which means we failed
-          // to subscribe and the user will need to manually change the
-          // notification permission to subscribe to push messages
-          console.warn("Permission for Notifications was denied.");
-        } else {
-          // A problem occurred with the subscription; common reasons include
-          // network errors, and lacking gcm_sender_id and/or
-          // gcm_user_visible_only in the manifest
-          console.error("Unable to subscribe to push", err);
+          reject("The user has blocked notifications");
+          return;
         }
-      });
-  });
-}
 
-function sendSubscriptionToServer(subscription) {
-  console.log("The user has successfully subscribed", subscription.endpoint);
-}
+        // Check if push messaging is supported
+        if (!('PushManager' in window)) {
+          reject("Push messaging isn't supported");
+          return;
+        }
+
+        // We need the service worker registration to check for a subscription
+        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+          // Do we already have a push message subscription?
+          serviceWorkerRegistration.pushManager.getSubscription()
+            .then(function(subscription) {
+              if (subscription) {
+                sendSubscriptionToServer(subscription);
+              } else {
+                subscribe();
+              }
+            })
+            .catch(function(err) {
+              reject("Error during getSubscription()", err);
+            });
+        });
+      }
+
+      function subscribe() {
+        navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+          serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
+            .then(function(subscription) {
+              sendSubscriptionToServer(subscription);
+            })
+            .catch(function (err) {
+              if (Notification.permission === 'denied') {
+                // The user denied the notification permission which means we failed
+                // to subscribe and the user will need to manually change the
+                // notification permission to subscribe to push messages
+                reject("Permission for Notifications was denied.");
+              } else {
+                // A problem occurred with the subscription; common reasons include
+                // network errors, and lacking gcm_sender_id and/or
+                // gcm_user_visible_only in the manifest
+                reject("Unable to subscribe to push", err);
+              }
+            });
+        });
+      }
+
+      function sendSubscriptionToServer(subscription) {
+        resolve(subscription);
+      }
+    });
+  };
+}).call(this);

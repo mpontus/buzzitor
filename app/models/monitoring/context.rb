@@ -2,6 +2,7 @@ module Monitoring
   class Context < ApplicationRecord
 
     has_many :results
+    has_many :subscribers
 
     after_create do
       FetchJob.perform_later self

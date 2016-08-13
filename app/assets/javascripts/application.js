@@ -25,14 +25,20 @@
       var poll = function () {
         setTimeout(function () {
           $.get(url).then( function (obj) {
-            if (obj != this.obj) {
-              this.obj = obj;
-              iframe = $('iframe').attr(src, obj.content_url);
-              $('#preview').children().remove();
-              $('#preview').append(iframe);
+            var content = obj.latest_content;
+            if (content !== null) {
+              if (content.status === 'content') {
+                if ((!this.obj) || (this.obj.latest_content.url !== content.url)) {
+                  console.log(content.url);
+                  var iframe = $('<iframe>').attr('src', content.url);
+                  $('#preview').children().remove();
+                  $('#preview').append(iframe);
+                  this.obj = obj;
+                }
+              }
             }
             poll();
-          });
+          }.bind(this));
         }, 1000);
       }
       poll();

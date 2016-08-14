@@ -5,7 +5,7 @@ require 'webmock/rspec'
 RSpec.describe Monitoring::Subscriber, type: :model do
   include ActiveJob::TestHelper
 
-  it "dispatches notification if the content was already fetched" do
+  it "dispatches notification on creation if the content was already fetched" do
     stub_request(:get, "http://example.org/")
       .to_return body: '<!doctype html><html><head><title>Example Domain</title></head><body>Hello world!</body></html>'
     stub_request(:post, "https://gcm-http.googleapis.com/gcm/send")

@@ -1,7 +1,7 @@
 class Monitoring::Subscriber < ApplicationRecord
   belongs_to :context
 
-  after_create do
+  after_create_commit do
     unless context.results.empty? then
       notify_initial
     end

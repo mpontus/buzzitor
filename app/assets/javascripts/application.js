@@ -31,28 +31,16 @@
   this.App || (this.App = {});
   this.App.MonitoringPreview = {
     init: function (id) {
-      this.obj = {};
-      var url = Routes.monitoring_context_path(id, {format: 'json'});
-      var poll = function () {
-        setTimeout(function () {
-          $.get(url).then( function (obj) {
-            var content = obj.latest_content;
-            if (content !== null) {
-              if (content.status === 'content') {
-                if ((!this.obj) || (this.obj.latest_content.url !== content.url)) {
-                  var iframe = $('<iframe>').attr('src', content.url);
-                  $('#preview').children().remove();
-                  $('#preview').append(iframe);
-                  this.obj = obj;
-                  return;
-                }
-              }
-            }
-            poll();
-          }.bind(this));
-        }, 1000);
+      var sub = App.cable.subscriptions.create(
+        { channel: 'MonitoringChannel', id: id }
+      );
+      sub.received = function(data) {
+        if (data.latest_content !== null) {
+          $('#preview').children().remove();
+          $('<iframe/>').appendTo('#preview');
+          $('iframe').attr('src', data.latest_content.url)
+        }
       }
-      poll();
     }
   }
 }).call(this);

@@ -2,7 +2,7 @@ class Monitoring::ResultsController < ApplicationController
   before_action :set_result, only: [:show]
 
   def show
-    render text: @result.content
+    self.response_body = @result.content
   end
 
   private

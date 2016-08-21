@@ -1,16 +1,6 @@
 require 'rails_helper'
 
-# Capybara::Selenium::Driver.class_eval do
-#   def quit
-#     puts "Press RETURN to quit the browser"
-#     $stdin.gets
-#     @browser.quit
-#   rescue Errno::ECONNREFUSED
-#     # Browser must have already gone
-#   end
-# end
-
-RSpec.feature "Notifications", js: true do
+RSpec.feature "Preview", js: true do
   before do
     stub_request(:any, /example.org/)
       .to_return body: <<-EOS
@@ -25,7 +15,7 @@ RSpec.feature "Notifications", js: true do
                  EOS
   end
 
-  it "occur after subscribing to monitoring context" do
+  it "corresponds to most recent result" do
     visit '/monitoring/contexts/new'
     fill_in "Url", with: "http://example.org/"
     click_button "Create Context"

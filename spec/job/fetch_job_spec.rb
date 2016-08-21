@@ -1,20 +1,29 @@
 require 'rails_helper'
-require 'webmock/rspec'
 
 RSpec.describe FetchJob, type: :job do
   before do
     stub_request(:get, "http://example.org/")
-      .to_return body: '<!doctype html><html><head><title>Example Domain</title></head><body>Hello world!</body></html>'
+      .to_return body: <<-EOS
+                        <!doctype html>
+                        <html>
+                          <head>
+                            <title>Example Domain</title>
+                          </head>
+                          <body>Hello world!</body>
+                        </html>
+                        EOS
+    @context = Monitoring::Context.create! url: "http://example.org/"
   end
 
-  it "should notify subscribers upon completion" do
-    stub_request(:post, "https://gcm-http.googleapis.com/gcm/send")
-      .to_return body: '{"multicast_id":8137295278192253139,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1471114573740287%faa30396faa30396"}]}'
+  it "should send welcoming notification to all existing subscribers after first result has been fetched" do
+    @context.subscribers.create! endpoint: "https://android.googleapis.com/gcm/send/ae5AUVXTN9o:APA91bE5UGE900VQSl7fqBtSilmeJXILkQY57LcSztb4zc-fpp0K84-5P3-aw2iArtgnTAEzw26OY4K48Omz0MnYmH__kKfd_hrpBexEI4HCEsuFcEzLOIkEMxLeH8wO2AKRRwWFB1CU"
+    expect {
+      FetchJob.perform_now(@context)
+    }.to change { Rpush::Notification.all.count } .by(1)
+  end
 
-    context = Monitoring::Context.create! url: "http://example.org/"
-    context.subscribers.create! endpoint: "https://android.googleapis.com/gcm/send/ee5AUVXTN9o:APA91bE5UGE900VQSl7fqBtSilmeJXILkQY57LcSztb4zc-fpp0K84-5P3-aw2iArtgnTAEzw26OY4K48Omz0MnYmH__kKfd_hrpBexEI4HCEsuFcEzLOIkEMxLeH8wO2AKRRwWFB1CU"
-
-    FetchJob.perform_now(context)
-    expect(a_request(:post, "https://gcm-http.googleapis.com/gcm/send")).to have_been_made
+  it "should broadcast new results for a context via action cable" do
+    expect(MonitoringChannel).to receive(:broadcast_to).with(@context, any_args)
+    FetchJob.perform_now(@context)
   end
 end

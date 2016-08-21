@@ -17,12 +17,11 @@ class Monitoring::SubscribersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_context
-      @context = Monitoring::Context.find(params[:id])
+      @context = Monitoring::Context.find(params[:context_id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def subscriber_params
-      params.permit(:endpoint)
+      params.require(:monitoring_subscriber).permit(:endpoint)
     end
-
 end

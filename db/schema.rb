@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20160813120236) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "monitoring_contexts", force: :cascade do |t|
     t.string   "url"
     t.datetime "fetched_at"
@@ -25,14 +28,16 @@ ActiveRecord::Schema.define(version: 20160813120236) do
     t.integer  "error_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["context_id"], name: "index_monitoring_results_on_context_id"
+    t.index ["context_id"], name: "index_monitoring_results_on_context_id", using: :btree
   end
 
   create_table "monitoring_subscribers", force: :cascade do |t|
     t.integer "context_id"
     t.string  "endpoint",   null: false
-    t.index ["context_id", "endpoint"], name: "index_monitoring_subscribers_on_context_id_and_endpoint", unique: true
-    t.index ["context_id"], name: "index_monitoring_subscribers_on_context_id"
+    t.index ["context_id", "endpoint"], name: "index_monitoring_subscribers_on_context_id_and_endpoint", unique: true, using: :btree
+    t.index ["context_id"], name: "index_monitoring_subscribers_on_context_id", using: :btree
   end
 
+  add_foreign_key "monitoring_results", "monitoring_contexts", column: "context_id"
+  add_foreign_key "monitoring_subscribers", "monitoring_contexts", column: "context_id"
 end

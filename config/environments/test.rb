@@ -39,4 +39,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Enable any origin to connect to Action Cable
+  config.action_cable.disable_request_forgery_protection = true
+
+  # Be as verbose as possible
+  config.log_level = :debug
 end

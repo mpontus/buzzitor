@@ -16,7 +16,35 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+
+require 'capybara/rspec'
+
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+
+# Capybara.register_driver :selenium_firefox do |app|
+#   Selenium::WebDriver::Firefox.path = Rails.root.to_s + '/firefox/firefox-bin'
+#   Capybara::Selenium::Driver.new(app, :browser => :firefox)
+# end
+# Capybara.javascript_driver = :selenium_firefox
+
+# Capybara.register_driver :selenium_chrome do |app|
+#   Capybara::Selenium::Driver.new(app, :browser => :chrome)
+# end
+# Capybara.javascript_driver = :selenium_chrome
+
+Capybara.register_server(:puma) do |app, port, host|
+  Puma::Server.new(app).tap do |s|
+    s.add_tcp_listener(host, port)
+  end.run.join
+end
+Capybara.server = :puma
+
+require 'webmock/rspec'
+WebMock.disable_net_connect!(allow_localhost: true)
+
 RSpec.configure do |config|
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
@@ -96,4 +124,27 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   Kernel.srand config.seed
 =end
+  # config.before do
+  #   WebMock.reset!
+  # end
+
+end
+
+puts "rspec pid: #{Process.pid}"
+
+trap 'USR1' do
+  threads = Thread.list
+
+  puts
+  puts "=" * 80
+  puts "Received USR1 signal; printing all #{threads.count} thread backtraces."
+
+  threads.each do |thr|
+    description = thr == Thread.main ? "Main thread" : thr.inspect
+    puts
+    puts "#{description} backtrace: "
+    puts thr.backtrace.join("\n")
+  end
+
+  puts "=" * 80
 end

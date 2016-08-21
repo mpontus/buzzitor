@@ -3,10 +3,10 @@ Rails.application.routes.draw do
   get '/serviceworker', to: 'core#serviceworker'
   get '/manifest',      to: 'core#manifest'
   namespace :monitoring do
-    resources :contexts do
-      member do
-        resources :subscribers
-      end
+    resources :contexts, only: [:show, :new, :create]  do
+      resources :subscribers, only: [:create]
+      # member do
+      # end
     end
     resources :results
   end

@@ -2,7 +2,9 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0'
-# Use sqlite3 as the database for Active Record
+# Use various drivers as the database for Active Record
+gem 'pg'
+gem 'mysql2'
 gem 'sqlite3'
 # Use Puma as the app server
 gem 'puma', '~> 3.0'
@@ -46,8 +48,24 @@ group :development, :test do
   # Use rspec for BDD
   gem 'rspec-rails'
 
+  # Additional matchers to test rails controllers
+  gem 'rails-controller-testing'
+
+  # Use capybara for integration testing
+  gem 'capybara'
+
   # Mock web requests
   gem 'webmock'
+
+  # Use Selenium to execute client-side javascript during development
+  gem 'selenium-webdriver'
+
+  # Use PhantomJS to execute client-side javascript
+  gem 'poltergeist'
+  gem 'phantomjs', require: 'phantomjs/poltergeist'
+
+  # Use Chrome as non-headless alternative javascript engine
+  gem 'chromedriver-helper'
 end
 
 group :development do

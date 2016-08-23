@@ -15,7 +15,7 @@ RSpec.feature "Preview", js: true do
                  EOS
   end
 
-  it "corresponds to most recent result" do
+  it "displays most recently fetched page" do
     visit '/monitoring/contexts/new'
     fill_in "Url", with: "http://example.org/"
     click_button "Create Context"

@@ -16,7 +16,7 @@ module Monitoring
     after_create_commit do
       if context.results.length > 1 then
         # Compare old and new result
-        old, new = context.results.last(2).map do |result|
+        old, new = context.reload.results.last(2).map do |result|
           Nokogiri::HTML(result.content)
         end
         if old.to_xml != new.to_xml

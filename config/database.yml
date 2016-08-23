@@ -6,6 +6,7 @@
 #
 default: &default
   adapter: postgresql
+  username: <%= ENV['DBUSER'] %>
   # pool: 5
   # timeout: 5000
 

@@ -28,6 +28,9 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+# Use Rufus Scheduler for periodic updates
+gem "rufus-scheduler"
+
 # Use RPush to send Push Notifications
 gem 'rpush'
 gem 'rpush-redis'

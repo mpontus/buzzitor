@@ -200,6 +200,7 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     rubyzip (1.2.0)
+    rufus-scheduler (3.2.1)
     safe_yaml (1.0.4)
     sass (3.4.22)
     sass-rails (5.0.6)
@@ -280,6 +281,7 @@ DEPENDENCIES
   rpush
   rpush-redis
   rspec-rails
+  rufus-scheduler
   sass-rails (~> 5.0)
   selenium-webdriver
   spring

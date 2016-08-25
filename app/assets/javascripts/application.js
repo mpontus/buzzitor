@@ -51,8 +51,8 @@
     init: function (id) {
       obtainSubscription()
         .then(function (subscription) {
-          var url = Routes.monitoring_subscribers_path(id, {format: 'json'});
-          $.post(url, {endpoint: subscription.endpoint});
+          var url = Routes.monitoring_context_subscribers_path(id, {format: 'json'});
+          $.post(url, {monitoring_subscriber: {endpoint: subscription.endpoint}});
         })
         .catch(function (error) {
           console.warn(error);

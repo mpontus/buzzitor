@@ -24,5 +24,8 @@
 # Ignore Byebug command history file.
 .byebug_history
 
-# Ignore sensitive information stored in the environment variables
+# Ignore sensitive information
 /.env
+
+# Ingore node_modules
+/node_modules

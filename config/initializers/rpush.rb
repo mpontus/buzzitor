@@ -1,7 +1,7 @@
 Rpush.configure do |config|
 
   # Supported clients are :active_record, :redis and :mongoid
-  config.client = :redis
+  config.client = :active_record
 
   # Options passed to Redis.new
   # config.redis_options = {}
@@ -134,7 +134,7 @@ Rpush.reflect do |on|
   # end
 end
 
-if !Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
+if !Rpush::Gcm::App.find_by_name("android_app")
   app = Rpush::Gcm::App.new
   app.name = "android_app"
   app.auth_key = ENV['BUZZITOR_GCM_PUBLIC_API_KEY']

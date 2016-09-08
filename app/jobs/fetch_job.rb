@@ -32,7 +32,7 @@ class FetchJob < ApplicationJob
       end
     rescue Capybara::Poltergeist::StatusFailError
       Monitoring::Result.new(
-        error_code: Monitoring::ErrorCodes::SERVER_UNREACHABLE_ERROR
+        error_code: Monitoring::ErrorCodes::CONNECTION_ERROR
       )
     rescue Capybara::Poltergeist::TimeoutError
       Monitoring::Result.new(

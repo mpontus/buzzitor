@@ -1,5 +1,6 @@
 defaults: &defaults
     fetcher_sleep: 1
+    fetch_interval: 30
 
 production:
     <<: *defaults
@@ -8,5 +9,6 @@ development:
     <<: *defaults
 
 test:
+    <<: *defaults
     fetcher_sleep: 0
 

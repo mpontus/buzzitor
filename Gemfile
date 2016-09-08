@@ -66,6 +66,9 @@ group :development, :test do
 
   # Use Chrome as non-headless alternative javascript engine
   gem 'chromedriver-helper'
+
+  # Use sinatra to mock external websites
+  gem 'sinatra', git: "https://github.com/sinatra/sinatra"
 end
 
 group :development do

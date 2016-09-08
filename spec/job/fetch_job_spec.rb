@@ -1,29 +1,66 @@
 require 'rails_helper'
+require 'support/test_app';
 
 RSpec.describe FetchJob, type: :job do
   before do
-    stub_request(:get, "http://example.org/")
-      .to_return body: <<-EOS
-                        <!doctype html>
-                        <html>
-                          <head>
-                            <title>Example Domain</title>
-                          </head>
-                          <body>Hello world!</body>
-                        </html>
-                        EOS
-    @context = Monitoring::Context.create! url: "http://example.org/"
+    @app = TestApp.new!
+    @server = Capybara::Server.new(@app).boot
+    @context = Monitoring::Context.create!(
+      url: "http://#{@server.host}:#{@server.port}/"
+    );
+    @app.content = "Hello world!"
   end
 
-  it "should send welcoming notification to all existing subscribers after first result has been fetched" do
-    @context.subscribers.create! endpoint: "https://android.googleapis.com/gcm/send/ae5AUVXTN9o:APA91bE5UGE900VQSl7fqBtSilmeJXILkQY57LcSztb4zc-fpp0K84-5P3-aw2iArtgnTAEzw26OY4K48Omz0MnYmH__kKfd_hrpBexEI4HCEsuFcEzLOIkEMxLeH8wO2AKRRwWFB1CU"
-    expect {
-      FetchJob.perform_now(@context)
-    }.to change { Rpush::Notification.all.count } .by(1)
+  it "should download the latest content" do
+    FetchJob.perform_now(@context)
+    expect(@context.results.last.content).to include("Hello world!")
+
+    @app.content = "Foo bar"
+    FetchJob.perform_now(@context)
+    expect(@context.results.last.content).to include("Foo bar")
   end
 
-  it "should broadcast new results for a context via action cable" do
+  it "broadcasts new results via action cable" do
     expect(MonitoringChannel).to receive(:broadcast_to).with(@context, any_args)
     FetchJob.perform_now(@context)
+  end
+
+  describe "notifications" do
+    before do
+      @context.subscribers.create! endpoint: "https://android.googleapis.com/gcm/send/ae5AUVXTN9o:APA91bE5UGE900VQSl7fqBtSilmeJXILkQY57LcSztb4zc-fpp0K84-5P3-aw2iArtgnTAEzw26OY4K48Omz0MnYmH__kKfd_hrpBexEI4HCEsuFcEzLOIkEMxLeH8wO2AKRRwWFB1CU"
+    end
+
+    it "should send welcoming notification after the initial fetch" do
+      expect {
+        FetchJob.perform_now(@context)
+      }.to change { Rpush::Notification.all.count } .by(1)
+    end
+
+    context "after initial fetch" do
+      before do
+        FetchJob.perform_now(@context)
+      end
+
+      context "remote page remains the same" do
+        it "should not send notifications" do
+          expect {
+            FetchJob.perform_now(@context)
+          }.not_to change { Rpush::Notification.all.count }
+        end
+      end
+
+      context "remote page has changed" do
+
+        before do
+          @app.content = "Foo Bar"
+        end
+
+        it "should send notification" do
+          expect {
+            FetchJob.perform_now(@context)
+          }.to change { Rpush::Notification.all.count } .by(1)
+        end
+      end
+    end
   end
 end

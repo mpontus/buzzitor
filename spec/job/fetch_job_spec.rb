@@ -3,12 +3,16 @@ require 'support/test_app';
 
 RSpec.describe FetchJob, type: :job do
   before do
+    # Use TestApp as a monitoring target
     @app = TestApp.new!
     @server = Capybara::Server.new(@app).boot
-    @context = Monitoring::Context.create!(
-      url: "http://#{@server.host}:#{@server.port}/"
-    );
+    @test_app_url = "http://#{@server.host}:#{@server.port+1}/";
+    @context = Monitoring::Context.create!(url: @test_app_url);
     @app.content = "Hello world!"
+    
+    # Use TestAdapter to avoid having FetchJob to be performed from
+    # Monitoring::Context lifecycle event
+    ActiveJob::Base.queue_adapter = :test
   end
 
   it "should download the latest content" do
@@ -20,7 +24,7 @@ RSpec.describe FetchJob, type: :job do
     expect(@context.results.last.content).to include("Foo bar")
   end
 
-  it "broadcasts new results via action cable" do
+  it "broadcasts new results via action cable", focus: true do
     expect(MonitoringChannel).to receive(:broadcast_to).with(@context, any_args)
     FetchJob.perform_now(@context)
   end

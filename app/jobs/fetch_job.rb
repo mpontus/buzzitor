@@ -3,6 +3,7 @@ class FetchJob < ApplicationJob
 
   def perform(context)
     context.results << fetch(context.url)
+    context.fetched_at = Time.now
     context.save!
 
     # Broadcast new result to all active visitors for this context

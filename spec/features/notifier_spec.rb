@@ -5,7 +5,6 @@ RSpec.feature "Notifier", js: true do
   include ActiveJob::TestHelper
 
   before do
-    ActiveJob::Base.queue_adapter = :test
     stub_request(:any, /example.org/)
       .to_return body: <<-HTML
                    <h1>Hello world!</h1>

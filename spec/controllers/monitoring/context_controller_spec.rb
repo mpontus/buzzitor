@@ -10,15 +10,6 @@ RSpec.describe Monitoring::ContextsController, type: :controller do
     { url: "foobar" }
   }
 
-  setup do
-    @original_queue_adapter = ActiveJob::Base.queue_adapter
-    ActiveJob::Base.queue_adapter = :test
-  end
-
-  teardown do
-    ActiveJob::Base.queue_adapter = @original_queue_adapter
-  end
-
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Monitoring::Context" do

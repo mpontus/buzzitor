@@ -12,7 +12,6 @@ RSpec.describe FetchJob, type: :job do
 
     # Use TestAdapter to avoid having FetchJob to be performed from
     # Monitoring::Context lifecycle event
-    ActiveJob::Base.queue_adapter = :test
   end
 
   it "should download the latest content" do

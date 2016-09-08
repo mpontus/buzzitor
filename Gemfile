@@ -38,6 +38,11 @@ gem 'rpush-redis'
 # Export routes to javascript
 gem 'js-routes'
 
+# Use phantomjs to fetch remote pages
+gem 'poltergeist'
+gem 'phantomjs', require: 'phantomjs/poltergeist'
+
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
@@ -61,8 +66,8 @@ group :development, :test do
   gem 'selenium-webdriver'
 
   # Use PhantomJS to execute client-side javascript
-  gem 'poltergeist'
-  gem 'phantomjs', require: 'phantomjs/poltergeist'
+  # gem 'poltergeist'
+  # gem 'phantomjs', require: 'phantomjs/poltergeist'
 
   # Use Chrome as non-headless alternative javascript engine
   gem 'chromedriver-helper'

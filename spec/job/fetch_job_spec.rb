@@ -67,4 +67,20 @@ RSpec.describe FetchJob, type: :job do
       end
     end
   end
+
+  describe "error handling" do
+    before do
+      allow(Buzzitor::PageFetcher).to receive(:fetch) do
+        raise Capybara::Poltergeist::StatusFailError
+                .new "Server inaccessible"
+      end
+    end
+
+    it "creates erroneous result", :focus do
+      expect {
+        FetchJob.perform_now(@context)
+      }.to change(@context.results, :count).by(1)
+      expect(@context.results.last).to be_nil
+    end
+  end
 end

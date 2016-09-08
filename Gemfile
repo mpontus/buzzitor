@@ -74,6 +74,9 @@ group :development, :test do
 
   # Use sinatra to mock external websites
   gem 'sinatra', git: "https://github.com/sinatra/sinatra"
+
+  # Use timecop to test time-dependent code
+  gem 'timecop'
 end
 
 group :development do

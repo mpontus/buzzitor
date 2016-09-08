@@ -4,14 +4,15 @@ require 'support/test_app';
 RSpec.describe FetchJob, type: :job do
   before do
     # Use TestApp as a monitoring target
-    @app = TestApp.new!
-    @server = Capybara::Server.new(@app).boot
-    @test_app_url = "http://#{@server.host}:#{@server.port}/";
-    @context = Monitoring::Context.create!(url: @test_app_url);
-    @app.content = "Hello world!"
 
-    # Use TestAdapter to avoid having FetchJob to be performed from
-    # Monitoring::Context lifecycle event
+    TestApp.boot do |server, app|
+      @server = server
+      @app = app
+    end
+
+    test_app_url = "http://#{@server.host}:#{@server.port}/";
+    @context = Monitoring::Context.create!(url: test_app_url);
+    @app.content = "Hello world!"
   end
 
   it "should download the latest content" do

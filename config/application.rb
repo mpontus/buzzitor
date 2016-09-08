@@ -12,5 +12,6 @@ module Buzzitor
       g.javascript_engine :js
       g.test_framework    :rspec
     end
+    config.autoload_paths << Rails.root.join('lib')
   end
 end

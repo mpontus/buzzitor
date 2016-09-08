@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(version: 20160813120236) do
 
   create_table "monitoring_results", force: :cascade do |t|
     t.integer  "context_id"
-    t.binary   "content"
+    t.text     "content"
+    t.binary   "screenshot"
     t.integer  "error_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

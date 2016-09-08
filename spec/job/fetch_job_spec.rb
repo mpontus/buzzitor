@@ -6,10 +6,10 @@ RSpec.describe FetchJob, type: :job do
     # Use TestApp as a monitoring target
     @app = TestApp.new!
     @server = Capybara::Server.new(@app).boot
-    @test_app_url = "http://#{@server.host}:#{@server.port+1}/";
+    @test_app_url = "http://#{@server.host}:#{@server.port}/";
     @context = Monitoring::Context.create!(url: @test_app_url);
     @app.content = "Hello world!"
-    
+
     # Use TestAdapter to avoid having FetchJob to be performed from
     # Monitoring::Context lifecycle event
     ActiveJob::Base.queue_adapter = :test
@@ -24,7 +24,7 @@ RSpec.describe FetchJob, type: :job do
     expect(@context.results.last.content).to include("Foo bar")
   end
 
-  it "broadcasts new results via action cable", focus: true do
+  it "broadcasts new results via action cable" do
     expect(MonitoringChannel).to receive(:broadcast_to).with(@context, any_args)
     FetchJob.perform_now(@context)
   end

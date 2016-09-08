@@ -1,0 +1,12 @@
+defaults: &defaults
+    fetcher_sleep: 1
+
+production:
+    <<: *defaults
+
+development:
+    <<: *defaults
+
+test:
+    fetcher_sleep: 0
+

@@ -5,16 +5,20 @@ class FetchJob < ApplicationJob
     context.results << fetch(context.url)
     context.save!
 
+    # Broadcast new result to all active visitors for this context
     serialized_context = MonitoringChannel.serialize_context context.reload
     MonitoringChannel.broadcast_to context, serialized_context
 
     if context.results.length == 1
+      # Send welcoming notification after retrieving the initial result
       context.subscribers.all.each &:welcome
     else
+      # Compare contents and erroneous status of this run with previous one
       old, new = context.results.last(2)
-      if old.error_code != new.error_code
-        or not equivalent(old.content, new.content)
+      if old.error_code != new.error_code or \
+        not equivalent(old.content, new.content)
       then
+        # Send the "page updated" message to all subscribers 
         context.subscribers.all.each &:update
       end
     end
@@ -24,10 +28,12 @@ class FetchJob < ApplicationJob
 
   def fetch(url)
     begin
-      Buzzitor::Fetcher.fetch(url) do |driver|
+      Buzzitor::PageFetcher.fetch(url) do |driver|
+        content = Buzzitor::PageProcessor.process(driver.html, url)
+        screenshot = Base64.decode64(driver.render_base64)
         Monitoring::Result.new(
-          content: cleanup(driver.html),
-          screenshot: driver.render_base64
+          content: content,
+          screenshot: screenshot
         );
       end
     rescue Capybara::Poltergeist::StatusFailError
@@ -41,18 +47,8 @@ class FetchJob < ApplicationJob
     end
   end
 
-  # Removes script tags
-  def cleanup(html)
-    noko = Nokogiri::HTML(html)
-    noko.xpath('//script').each(&:remove)
-    noko.to_xhtml
-  end
-
-  # Compares two versions
-  def equivalent(doc1, doc2)
-    noko1 = Nokogiri::HTML(doc1)
-    noko2 = Nokogiri::HTML(doc2)
-    noko1.xpath('//body')[0].to_xhtml == noko2.xpath('//body')[0].to_xhtml
+  def equivalent(old, new)
+    Buzzitor::PageComparator.compare(old, new)
   end
 
 end

@@ -6,11 +6,11 @@ class Monitoring::Subscriber < ApplicationRecord
   end
 
   def welcome
-    notify "Buzzitor!", body: "Monitoring has started."
+    notify context.results.last.title, body: "Monitoring has begun"
   end
 
   def update
-    notify "Buzzitor!", body: "Page has changed."
+    notify context.results.last.title, body: "Page was updated"
   end
 
   def notify(title, options = {})

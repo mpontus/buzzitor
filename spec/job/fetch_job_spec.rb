@@ -3,8 +3,6 @@ require 'support/test_app';
 
 RSpec.describe FetchJob, type: :job do
   before do
-    # Use TestApp as a monitoring target
-
     TestApp.boot do |server, app|
       @server = server
       @app = app
@@ -12,16 +10,18 @@ RSpec.describe FetchJob, type: :job do
 
     test_app_url = "http://#{@server.host}:#{@server.port}/";
     @context = Monitoring::Context.create!(url: test_app_url);
-    @app.content = "Hello world!"
+    @app.content = "<title>Hello world!</title>"
+  
+    allow(Webpush).to receive(:payload_send)
   end
 
-  it "should download the latest content" do
+  it "should download the latest content", :focus do
     FetchJob.perform_now(@context)
-    expect(@context.results.last.content).to include("Hello world!")
+    expect(@context.results.last.title).to eq("Hello world!")
 
-    @app.content = "Foo bar"
+    @app.content = "<title>Foo bar</title>"
     FetchJob.perform_now(@context)
-    expect(@context.results.last.content).to include("Foo bar")
+    expect(@context.results.last.title).to eq("Foo bar")
   end
 
   it "broadcasts new results via action cable" do
@@ -31,13 +31,18 @@ RSpec.describe FetchJob, type: :job do
 
   describe "notifications" do
     before do
-      @context.subscribers.create! endpoint: "https://android.googleapis.com/gcm/send/ae5AUVXTN9o:APA91bE5UGE900VQSl7fqBtSilmeJXILkQY57LcSztb4zc-fpp0K84-5P3-aw2iArtgnTAEzw26OY4K48Omz0MnYmH__kKfd_hrpBexEI4HCEsuFcEzLOIkEMxLeH8wO2AKRRwWFB1CU"
+      @context.subscribers.create!(
+        endpoint: "https://android.googleapis.com/gcm/send/e_8ZoEDHNRg:APA91bEyyhkkz5W67b5HcNitP1OtUT_7bsZBLSDgaBrvuV-CAVG-FeVB_ZiywQzii7peAuVifzCu2udu8EISwIZUoetIE39ODzwDXzulqpMPLKkp1C9Or_GPMNC1V8V0fvKuW4u_VZT7",
+        keys: {
+          "auth" => "wb2e4qEzCXAEjyCV48vjCQ==",
+          "p256dh" => "BAFs0PT443mBiX4Zf1u_M_sOemvCxQbRTaV3zKhxOOTjiK7Wc5AaYoXoLZnug76BtKH89E6TTqZOa4POkurpMR8=",
+        }
+      )
     end
 
     it "should send welcoming notification after the initial fetch" do
-      expect {
-        FetchJob.perform_now(@context)
-      }.to change { Rpush::Notification.all.count } .by(1)
+      expect(Webpush).to receive(:payload_send)
+      FetchJob.perform_now(@context)
     end
 
     context "after initial fetch" do
@@ -47,9 +52,8 @@ RSpec.describe FetchJob, type: :job do
 
       context "remote page remains the same" do
         it "should not send notifications" do
-          expect {
-            FetchJob.perform_now(@context)
-          }.not_to change { Rpush::Notification.all.count }
+          expect(Webpush).not_to receive(:payload_send)
+          FetchJob.perform_now(@context)
         end
       end
 
@@ -60,9 +64,8 @@ RSpec.describe FetchJob, type: :job do
         end
 
         it "should send notification" do
-          expect {
-            FetchJob.perform_now(@context)
-          }.to change { Rpush::Notification.all.count } .by(1)
+          expect(Webpush).to receive(:payload_send)
+          FetchJob.perform_now(@context)
         end
       end
     end
@@ -76,11 +79,11 @@ RSpec.describe FetchJob, type: :job do
       end
     end
 
-    it "creates erroneous result", :focus do
+    it "creates erroneous result" do
       expect {
         FetchJob.perform_now(@context)
       }.to change(@context.results, :count).by(1)
-      expect(@context.results.last).to be_nil
+      expect(@context.results.last.error_code).not_to be_nil
     end
   end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Buzzitor::PageProcessor do
 
-  let (:url) { "http://example.org/subdir/index.html" }
+  let (:url) { "https://example.org/subdir/index.html" }
 
   subject do
     proc do |document|
@@ -38,20 +38,34 @@ RSpec.describe Buzzitor::PageProcessor do
     result = subject.call <<-HTML
       <img src="/foobar" />
     HTML
-    expect(result).to include("http://example.org/foobar")
+    expect(result).to include("https://example.org/foobar")
   end
 
   it "rewrites relative uri" do
     result = subject.call <<-HTML
       <img src="foo/bar" />
     HTML
-    expect(result).to include("http://example.org/subdir/foo/bar")
+    expect(result).to include("https://example.org/subdir/foo/bar")
   end
 
   it "adds a _target=\"blank\" attribute to hyperlinks" do
     result = subject.call <<-HTML
-      <a href="http://example.org" />
+      <a href="https://foo.bar.org" />
     HTML
     expect(result).to include('target="_blank"');
+  end
+
+  it "processes protocol-relative urls" do
+    result = subject.call <<-HTML
+      <a href="//foo.bar.org">
+    HTML
+    expect(result).to include('href="https://foo.bar.org"')
+  end
+
+  it "processes invalid urls" do
+    result = subject.call <<-HTML
+      <a href=":/foo\#{bar: baz}">
+    HTML
+    expect(result).to include('#%7Bbar:%20baz%7D')
   end
 end

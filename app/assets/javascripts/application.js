@@ -52,7 +52,7 @@
       obtainSubscription()
         .then(function (subscription) {
           var url = Routes.monitoring_context_subscribers_path(id, {format: 'json'});
-          $.post(url, {monitoring_subscriber: {endpoint: subscription.endpoint}});
+          $.post(url, {subscription: subscription.toJSON()});
         })
         .catch(function (error) {
           console.warn(error);

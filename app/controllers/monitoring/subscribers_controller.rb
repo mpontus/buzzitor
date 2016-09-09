@@ -2,8 +2,12 @@ class Monitoring::SubscribersController < ApplicationController
   before_action :set_context
 
   def create
-    @subscriber = @context.subscribers.find_or_initialize_by(subscriber_params)
+    @subscriber = @context.subscribers.find_or_initialize_by(
+      endpoint: params[:subscription][:endpoint]
+    )
+    @subscriber.keys = params[:subscription][:keys]
     respond_to do |format|
+      @subscriber.welcome
       if @subscriber.save then
         format.html { redirect_to @context, notice: "Subscription successful." }
         format.json { render template: 'monitoring/contexts/show' }
@@ -22,6 +26,6 @@ class Monitoring::SubscribersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def subscriber_params
-      params.require(:monitoring_subscriber).permit(:endpoint)
+      params.require(:subscription).permit(:endpoint, :keys)
     end
 end

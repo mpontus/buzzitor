@@ -6,24 +6,25 @@ class Monitoring::Subscriber < ApplicationRecord
   end
 
   def welcome
-    notify "Monitoring has started!"
+    notify "Buzzitor!", body: "Monitoring has started."
   end
 
   def update
-    notify "Page has changed!"
+    notify "Buzzitor!", body: "Page has changed."
   end
 
-  def notify(message)
-    registration_id = File.basename(URI(endpoint).path)
-    n = Rpush::Gcm::Notification.new
-    n.app = Rpush::Gcm::App.where(name: "android_app").first #find_by_name("android_app")
-    n.registration_ids = [ registration_id ]
-    n.priority = 'high'
-    n.content_available = true
-    n.notification = {
-      title: "Buzzitor",
-      body: message,
+  def notify(title, options = {})
+    params = {
+      endpoint: endpoint,
+      auth: keys["auth"],
+      p256dh: keys["p256dh"],
+      message: {
+        title: title,
+        body: options[:body],
+        icon: options[:icon]
+      }.to_json,
+      api_key: ENV['BUZZITOR_GCM_PUBLIC_API_KEY']
     }
-    n.save!
+    Webpush.payload_send(params)
   end
 end

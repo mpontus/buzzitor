@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20160813120236) do
   create_table "monitoring_subscribers", force: :cascade do |t|
     t.integer "context_id"
     t.string  "endpoint",   null: false
-    t.json    "keys"
+    t.json    "keys",       null: false
     t.index ["context_id", "endpoint"], name: "index_monitoring_subscribers_on_context_id_and_endpoint", unique: true, using: :btree
     t.index ["context_id"], name: "index_monitoring_subscribers_on_context_id", using: :btree
   end

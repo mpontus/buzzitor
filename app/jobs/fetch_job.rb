@@ -33,6 +33,7 @@ class FetchJob < ApplicationJob
         content = Buzzitor::PageProcessor.process(driver.html, url)
         screenshot = Base64.decode64(driver.render_base64)
         Monitoring::Result.new(
+          title: driver.title,
           content: content,
           screenshot: screenshot
         );

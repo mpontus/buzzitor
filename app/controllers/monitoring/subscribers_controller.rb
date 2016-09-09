@@ -7,7 +7,6 @@ class Monitoring::SubscribersController < ApplicationController
     )
     @subscriber.keys = params[:subscription][:keys]
     respond_to do |format|
-      @subscriber.welcome
       if @subscriber.save then
         format.html { redirect_to @context, notice: "Subscription successful." }
         format.json { render template: 'monitoring/contexts/show' }

@@ -6,21 +6,21 @@ class Monitoring::Subscriber < ApplicationRecord
   end
 
   def welcome
-    notify context.results.last.title, body: "Monitoring has begun"
+    notify "Monitoring has begun!"
   end
 
   def update
-    notify context.results.last.title, body: "Page was updated"
+    notify "Page was updated!"
   end
 
-  def notify(title, options = {})
+  def notify(body)
     params = {
       endpoint: endpoint,
       auth: keys["auth"],
       p256dh: keys["p256dh"],
       message: {
-        title: title,
-        body: options[:body],
+        title: context.results.last.title,
+        body: body,
         icon: context.results.last.thumbnail.url
       }.to_json,
       api_key: ENV['BUZZITOR_GCM_PUBLIC_API_KEY']

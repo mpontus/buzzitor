@@ -4,7 +4,7 @@ class CreateMonitoringResults < ActiveRecord::Migration[5.0]
       t.references :context, foreign_key: { to_table: :monitoring_contexts }
       t.text :title
       t.text :content
-      t.binary :screenshot
+      t.string :thumbnail
       t.integer :error_code
 
       t.timestamps

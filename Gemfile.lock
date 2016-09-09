@@ -64,6 +64,10 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    carrierwave (1.0.0.beta)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      mime-types (>= 1.16)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.0.0)
@@ -258,6 +262,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   byebug
   capybara
+  carrierwave (>= 1.0.0.beta, < 2.0)
   chromedriver-helper
   coffee-rails (~> 4.2)
   dotenv-rails

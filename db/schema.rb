@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20160813120236) do
     t.integer  "context_id"
     t.text     "title"
     t.text     "content"
-    t.binary   "screenshot"
+    t.string   "thumbnail"
     t.integer  "error_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

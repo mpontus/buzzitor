@@ -41,6 +41,8 @@ gem 'js-routes'
 gem 'poltergeist'
 gem 'phantomjs', require: 'phantomjs/poltergeist'
 
+# Use Carrierwave to save fetched page content and thumbnail
+gem 'carrierwave', '>= 1.0.0.beta', '< 2.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

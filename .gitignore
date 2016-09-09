@@ -29,3 +29,6 @@
 
 # Ingore node_modules
 /node_modules
+
+# Ignore uploaded content
+/public/uploads

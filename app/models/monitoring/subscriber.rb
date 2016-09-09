@@ -21,6 +21,7 @@ class Monitoring::Subscriber < ApplicationRecord
       message: {
         title: title,
         body: options[:body],
+        icon: context.results.last.thumbnail.url
       }.to_json,
       api_key: ENV['BUZZITOR_GCM_PUBLIC_API_KEY']
     }

@@ -35,7 +35,7 @@ class FetchJob < ApplicationJob
         Monitoring::Result.new(
           title: driver.title,
           content: content,
-          screenshot: screenshot
+          thumbnail: NamedStringIO.new("thumb.png", screenshot)
         );
       end
     rescue Capybara::Poltergeist::StatusFailError

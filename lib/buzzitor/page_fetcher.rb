@@ -3,6 +3,7 @@ class Buzzitor::PageFetcher
     def fetch(url)
       driver = Capybara::Poltergeist::Driver.new(
         nil,
+        js_errors: false,
         phantomjs: Phantomjs.path
       )
       driver.visit(url)

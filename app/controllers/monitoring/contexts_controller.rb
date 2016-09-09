@@ -18,7 +18,6 @@ class Monitoring::ContextsController < ApplicationController
 
     respond_to do |format|
       if @context.save
-        FetchJob.perform_later(@context)
         format.html { redirect_to @context, notice: 'Monitoring was successfully created.' }
         format.json { render :show, status: :created, location: @context }
       else

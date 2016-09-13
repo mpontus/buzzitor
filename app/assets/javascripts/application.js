@@ -36,17 +36,19 @@
       );
       sub.received = function(data) {
         if (data.latest_result !== null) {
-          $('.loading').remove();
+          $('.result').children().remove();
           var result = data.latest_result;
           switch (result.status) {
             case 'content':
               $('<iframe class="preview"/>')
-                .attr('src', result.url)
+                .attr('src', result.content_url)
                 .appendTo('.result');
               break;
             case 'error':
+              var msg_and_desc =
+                error_message_and_description(result.error_code);
               $('<div class="error">')
-                .html(result.message)
+                .html("<h1>"+msg_and_desc[0]+"</h1><p>"+msg_and_desc[1]+"</p>")
                 .appendTo('.result');
               break;
           }
@@ -54,6 +56,33 @@
       }
     }
   }
+
+  function error_message_and_description(error_code) {
+    switch (error_code) {
+      case 101:
+        return [
+          "Server is inaccessible",
+          "We were unable to connect to the host. "
+          + " Our attempts will continue and you will be notified "
+          + " when situation changes."
+        ];
+      case 102:
+        return [
+          "Timeout error",
+          "Server was unable to respond to our request in reasonable time."
+          + " Our attempts will continue and you will be notified "
+          + " when situation changes."
+        ];
+      default:
+        return [
+          "Unknown error",
+          " An error occured while trying to retrieve the page."
+          + " Our attempts will continue and you will be notified "
+          + " when situation changes."
+        ];
+    }
+  }
+
 }).call(this);
 
 (function() {

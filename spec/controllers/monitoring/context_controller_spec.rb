@@ -11,29 +11,37 @@ RSpec.describe Monitoring::ContextsController, type: :controller do
   }
 
   describe "POST #create" do
+
     context "with valid params" do
-      it "creates a new Monitoring::Context" do
+
+      it "creates new context" do
         expect {
-          post :create, params: {monitoring_context: valid_attributes}
+          post :create, xhr: true, format: :json, params: {monitoring_context: valid_attributes}
         }.to change(Monitoring::Context, :count).by(1)
       end
 
-      it "assigns a newly created monitoring_context as @monitoring_context" do
-        post :create, params: {monitoring_context: valid_attributes}
-        expect(assigns(:context)).to be_a(Monitoring::Context)
-        expect(assigns(:context)).to be_persisted
-      end
-
-      it "enqueues FetchJob on newly created context" do
+      it "enqueues FetchJob for newly created context" do
         expect {
-          post :create, params: {monitoring_context: valid_attributes}
+          post :create, xhr: true, format: :json, params: {monitoring_context: valid_attributes}
         }.to have_enqueued_job(FetchJob)
       end
 
-      it "redirects to the created monitoring_context" do
-        post :create, params: {monitoring_context: valid_attributes}
-        expect(response).to redirect_to(Monitoring::Context.last)
+      it "returns newly created object serialized into json" do
+        post :create, xhr: true, format: :json, params: {monitoring_context: valid_attributes}
+        expect(response).to have_node(:id).with(Monitoring::Context.last.id)
       end
+
     end
+
+    context "with invalid params" do
+
+      it "returns json status error" do
+        post :create, xhr: true, format: :json, params: {monitoring_context: invalid_attributes}
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+    end
+
   end
+
 end

@@ -18,9 +18,17 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'webmock/rspec'
+require 'api_matchers'
+
 WebMock.disable_net_connect!(allow_localhost: true)
 
+APIMatchers.setup do |config|
+  config.response_body_method = :body
+end
+
 RSpec.configure do |config|
+  # Include matchers for testing ajax responses
+  config.include APIMatchers::RSpecMatchers
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

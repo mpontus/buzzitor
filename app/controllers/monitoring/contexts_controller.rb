@@ -4,6 +4,10 @@ class Monitoring::ContextsController < ApplicationController
   # GET /monitorings/1
   # GET /monitorings/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.json { render json: @context }
+    end
   end
 
   # GET /monitorings/new
@@ -18,8 +22,8 @@ class Monitoring::ContextsController < ApplicationController
 
     respond_to do |format|
       if @context.save
-        format.html { redirect_to @context, notice: 'Monitoring was successfully created.' }
-        format.json { render :show, status: :created, location: @context }
+        format.html { redirect_to @context }
+        format.json { render json: @context, status: :created }
       else
         format.html { render :new }
         format.json { render json: @context.errors, status: :unprocessable_entity }

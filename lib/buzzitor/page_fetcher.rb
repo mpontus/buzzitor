@@ -4,10 +4,11 @@ class Buzzitor::PageFetcher
       driver = Capybara::Poltergeist::Driver.new(
         nil,
         js_errors: false,
-        phantomjs: Phantomjs.path
+        phantomjs: Phantomjs.path,
+        timeout: APP_CONFIG['page_fetcher_timeout'] || 0,
       )
       driver.visit(url)
-      sleep APP_CONFIG['fetcher_sleep'] || 0;
+      sleep APP_CONFIG['page_fetcher_delay'] || 0;
       yield driver
     ensure
       driver.quit

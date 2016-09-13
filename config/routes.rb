@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'core#homepage'
+  root 'monitoring/contexts#new'
   get '/serviceworker', to: 'core#serviceworker'
   get '/manifest',      to: 'core#manifest'
   namespace :monitoring do

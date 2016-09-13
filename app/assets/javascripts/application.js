@@ -35,10 +35,21 @@
         { channel: 'MonitoringChannel', id: id }
       );
       sub.received = function(data) {
-        if (data.latest_content !== null) {
-          $('#preview').children().remove();
-          $('<iframe/>').appendTo('#preview');
-          $('iframe').attr('src', data.latest_content.url)
+        if (data.latest_result !== null) {
+          $('.loading').remove();
+          var result = data.latest_result;
+          switch (result.status) {
+            case 'content':
+              $('<iframe class="preview"/>')
+                .attr('src', result.url)
+                .appendTo('.result');
+              break;
+            case 'error':
+              $('<div class="error">')
+                .html(result.message)
+                .appendTo('.result');
+              break;
+          }
         }
       }
     }

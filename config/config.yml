@@ -1,5 +1,6 @@
 defaults: &defaults
-    fetcher_sleep: 1
+    page_fetcher_timeout: 5
+    page_fetcher_delay: 1
     fetch_interval: 30
 
 production:
@@ -10,5 +11,5 @@ development:
 
 test:
     <<: *defaults
-    fetcher_sleep: 0
+    page_fetcher_delay: 0
 

@@ -1,7 +1,6 @@
 require 'rails_helper'
 require 'support/fake_host';
 
-
 RSpec.describe FetchJob, type: :job do
   setup do
     allow(Webpush).to receive(:payload_send)
@@ -19,6 +18,15 @@ RSpec.describe FetchJob, type: :job do
     @fake_host.shutdown
   end
 
+  setup do
+    @original_queue_adapter = ActiveJob::Base.queue_adapter
+    ActiveJob::Base.queue_adapter = :test
+  end
+
+  teardown do
+    ActiveJob::Base.queue_adapter = @original_queue_adapter
+  end
+
   before do
     @context = Monitoring::Context.create!(url: @fake_host.base_url);
   end
@@ -32,7 +40,7 @@ RSpec.describe FetchJob, type: :job do
         "<title>Foo bar</title>"
       end
     end
-    
+
     FetchJob.perform_now(@context)
     expect(@context.results.last.title).to eq("Foo bar")
   end

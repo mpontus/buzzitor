@@ -69,8 +69,10 @@ RSpec.feature "Live results", js: true do
       find(:fillable_field, "Url").native.send_keys(:return)
     end
 
-    it "displays the error", :focus do
-      expect(page).to have_selector(".result .error")
+    it "displays the error" do
+      using_wait_time 50 do
+        expect(page).to have_selector(".result .error")
+      end
     end
   end
 end

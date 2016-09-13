@@ -5,6 +5,8 @@ require 'capybara/poltergeist'
 require 'puma'
 
 Capybara.register_server(:puma) do |app, port, host|
+  Rails.application.routes.default_url_options[:host] = "#{host}:#{port}"
+
   Puma::Server.new(app).tap do |s|
     s.add_tcp_listener(host, port)
   end.run.join

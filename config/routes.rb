@@ -10,5 +10,4 @@ Rails.application.routes.draw do
     end
     resources :results
   end
-  get '/.well-known/acme-challenge/tV5QuMB7r3YItpkHDs882uwGd_Wf-W3bhy4DobY_5Ww', to: 'core#letsencrypt'
 end

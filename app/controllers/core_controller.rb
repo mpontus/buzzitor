@@ -17,8 +17,4 @@ class CoreController < ApplicationController
       format.json
     end
   end
-
-  def letsencrypt
-    render text: 'tV5QuMB7r3YItpkHDs882uwGd_Wf-W3bhy4DobY_5Ww.iOyqJ4NTbpqXdsH4de834HMr2klY_oVbJaKqDc_Wolc'
-  end
 end

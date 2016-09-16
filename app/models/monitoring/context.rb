@@ -8,6 +8,12 @@ class Monitoring::Context < ApplicationRecord
     FetchJob.perform_later(self)
   end
 
+  after_update_commit do
+    # Broadcast new result to all active visitors for this context
+    serialized_context = MonitoringChannel.serialize_context self.reload
+    MonitoringChannel.broadcast_to self, serialized_context
+  end
+
   def latest_result
     results.last
   end

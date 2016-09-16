@@ -6,10 +6,6 @@ class FetchJob < ApplicationJob
     context.fetched_at = Time.now
     context.save!
 
-    # Broadcast new result to all active visitors for this context
-    serialized_context = MonitoringChannel.serialize_context context.reload
-    MonitoringChannel.broadcast_to context, serialized_context
-
     if context.results.length == 1
       # Send welcoming notification after retrieving the initial result
       context.subscribers.all.each &:welcome

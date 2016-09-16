@@ -1,7 +1,7 @@
 defaults: &defaults
-    page_fetcher_timeout: 5
+    page_fetcher_timeout: 10
     page_fetcher_delay: 1
-    fetch_interval: 10
+    fetch_interval: 30
 
 production:
     <<: *defaults

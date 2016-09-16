@@ -13,5 +13,7 @@ module Buzzitor
       g.test_framework    :rspec
     end
     config.autoload_paths << Rails.root.join('lib')
+    # Enable any origin to connect to Action Cable
+    config.action_cable.disable_request_forgery_protection = true
   end
 end

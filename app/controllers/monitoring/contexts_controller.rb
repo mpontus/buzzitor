@@ -1,9 +1,10 @@
 class Monitoring::ContextsController < ApplicationController
-  before_action :set_context, only: [:show, :edit, :update, :destroy]
+  before_action :set_context, only: [:show, :update]
 
   # GET /monitorings/1
   # GET /monitorings/1.json
   def show
+    @context.update visited_at: Time.now
     respond_to do |format|
       format.html
       format.json { render json: @context }
@@ -28,6 +29,15 @@ class Monitoring::ContextsController < ApplicationController
         format.html { render :new }
         format.json { render json: @context.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  # POST /monitoring/1
+  def update
+    @context.update params.require(:monitoring_context).permit(:active)
+    respond_to do |format|
+      format.html { redirect_to @context }
+      format.json { render json: @context, status: :updated }
     end
   end
 

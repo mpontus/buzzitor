@@ -1,6 +1,14 @@
 <p>
   Monitoring Url: <%= @context.url %>
 </p>
+<div id="pause_and_resume">
+  <button id="pause" disabled="disabled">
+    Pause
+  </button>
+  <button id="resume" disabled="disabled" style="display: none">
+    Resume
+  </button>
+</div>
 <div class="result">
   <div class="loading">
     Loading...

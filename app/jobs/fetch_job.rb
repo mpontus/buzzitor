@@ -1,3 +1,8 @@
+require 'buzzitor/page_fetcher';
+require 'buzzitor/page_processor';
+require 'buzzitor/page_comparator';
+require 'named_string_io';
+
 class FetchJob < ApplicationJob
   queue_as :default
 

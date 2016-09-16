@@ -2,12 +2,23 @@ self.addEventListener('push', function(event) {
   console.log("Received notification!");
   var data = event.data.json();
   options = {
-    body: data.body
+    body: data.body,
+    tag: data.id
   };
   if (data.hasOwnProperty('icon')) {
     options.icon = data.icon;
   }
   event.waitUntil(
     self.registration.showNotification(data.title, options)
+  );
+});
+self.addEventListener('notificationclick', function(event) {
+  event.notification.close();
+  console.log(event.notification);
+  event.waitUntil(
+    self.registration.pushManager.getSubscription().then(function(subscription) {
+      var targetUrl = '/monitoring/contexts/' + event.notification.tag;
+      return clients.openWindow(targetUrl);
+    })
   );
 });

@@ -19,6 +19,7 @@ class Monitoring::Subscriber < ApplicationRecord
       auth: keys["auth"],
       p256dh: keys["p256dh"],
       message: {
+        id: context.id,
         title: context.results.last.title,
         body: body,
         icon: context.results.last.thumbnail.url

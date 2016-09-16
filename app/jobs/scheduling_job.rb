@@ -9,7 +9,7 @@ class SchedulingJob < ApplicationJob
     # than `interval` seconds ago.
     interval = APP_CONFIG['fetch_interval'] || 60
     Monitoring::Context
-      .where('active = 1')
+      .where(active: true)
       .where('fetched_at < :before',
              { before: interval.seconds.ago })
       .order(fetched_at: :asc).limit(1)

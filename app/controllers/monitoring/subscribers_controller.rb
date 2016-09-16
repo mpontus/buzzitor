@@ -9,7 +9,7 @@ class Monitoring::SubscribersController < ApplicationController
     respond_to do |format|
       if @subscriber.save then
         format.html { redirect_to @context, notice: "Subscription successful." }
-        format.json { render template: 'monitoring/contexts/show' }
+        format.json { render json: @context }
       else
         format.html { render template: 'monitoring/contexts/show' }
         format.json { render json: @subscriber.errors, status: :unprocessable_entry }

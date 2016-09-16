@@ -1,6 +1,6 @@
 require 'rufus-scheduler'
 
-if Rails.env == 'production'
+if Rails.env != 'test'
   scheduler = Rufus::Scheduler::singleton
 
   scheduler.every '5s' do

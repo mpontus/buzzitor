@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require js-routes
 //= require_tree .
 
@@ -34,7 +33,30 @@
       var sub = App.cable.subscriptions.create(
         { channel: 'MonitoringChannel', id: id }
       );
+      $('#pause').click(function (e) {
+        e.preventDefault();
+        $.post(Routes.monitoring_context_path(id), {
+          '_method': 'put',
+          'monitoring_context': {
+            'active': false,
+          }
+        });
+        $(this).attr('disabled', 'disalbed');
+      });
+      $('#resume').click(function (e) {
+        e.preventDefault();
+        $.post(Routes.monitoring_context_path(id), {
+          '_method': 'put',
+          'monitoring_context': {
+            'active': true,
+          },
+        });
+        $(this).attr('disabled', 'disalbed');
+      });
       sub.received = function(data) {
+        $('#pause_and_resume button').attr('disabled', null);
+        $('#pause').toggle(data.active);
+        $('#resume').toggle(!data.active);
         if (data.latest_result !== null) {
           $('.result').children().remove();
           var result = data.latest_result;

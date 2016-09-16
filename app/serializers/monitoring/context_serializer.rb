@@ -1,6 +1,7 @@
 class Monitoring::ContextSerializer < ActiveModel::Serializer
   attribute :id
   attribute :url, key: :address
+  attribute :active
 
   has_one :latest_result
 

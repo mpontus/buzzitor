@@ -29,44 +29,55 @@
 (function() {
   this.App || (this.App = {});
   this.App.MonitoringPreview = {
+    updateResultHeight: function () {
+        var toolbarHeight = $('.monitoring .toolbar').outerHeight();
+        var windowHeight = $(window).outerHeight();
+        $('.monitoring .result').css('height', windowHeight - toolbarHeight);
+    },
     init: function (id) {
       var sub = App.cable.subscriptions.create(
         { channel: 'MonitoringChannel', id: id }
       );
-      $('#pause').click(function (e) {
-        e.preventDefault();
-        $.post(Routes.monitoring_context_path(id), {
-          '_method': 'put',
-          'monitoring_context': {
-            'active': false,
-          }
-        });
-        $(this).attr('disabled', 'disalbed');
-      });
-      $('#resume').click(function (e) {
-        e.preventDefault();
-        $.post(Routes.monitoring_context_path(id), {
-          '_method': 'put',
-          'monitoring_context': {
-            'active': true,
-          },
-        });
-        $(this).attr('disabled', 'disalbed');
-      });
+      $(window).resize(this.updateResultHeight);
+      $(document).ready(this.updateResultHeight);
+      // $('#pause').click(function (e) {
+      //   e.preventDefault();
+      //   $.post(Routes.monitoring_context_path(id), {
+      //     '_method': 'put',
+      //     'monitoring_context': {
+      //       'active': false,
+      //     }
+      //   });
+      //   $(this).attr('disabled', 'disalbed');
+      // });
+      // $('#resume').click(function (e) {
+      //   e.preventDefault();
+      //   $.post(Routes.monitoring_context_path(id), {
+      //     '_method': 'put',
+      //     'monitoring_context': {
+      //       'active': true,
+      //     },
+      //   });
+      //   $(this).attr('disabled', 'disalbed');
+      // });
       sub.received = function(data) {
-        $('#pause_and_resume button').attr('disabled', null);
+        $('#pause, #resume').attr('disabled', null);
         $('#pause').toggle(data.active);
         $('#resume').toggle(!data.active);
+        var result;
         if (data.latest_result !== null) {
-          $('.result').children().remove();
+          $('.result .loading').hide();
           var result = data.latest_result;
           switch (result.status) {
             case 'content':
-              $('<iframe class="preview"/>')
-                .attr('src', result.content_url)
-                .appendTo('.result');
+              if ($('iframe.content').attr('src') != result.content_url) {
+                $('iframe.content').attr('src', result.content_url);
+              }
+              $('iframe.content').show();
+              $('.result .error').remove();
               break;
             case 'error':
+              $('iframe.content').hide();
               var msg_and_desc =
                 error_message_and_description(result.error_code);
               $('<div class="error">')
@@ -76,7 +87,8 @@
           }
         }
       }
-    }
+    },
+    
   }
 
   function error_message_and_description(error_code) {

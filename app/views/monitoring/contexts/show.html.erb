@@ -1,17 +1,41 @@
-<p>
-  Monitoring Url: <%= @context.url %>
-</p>
-<div id="pause_and_resume">
-  <button id="pause" disabled="disabled">
-    Pause
-  </button>
-  <button id="resume" disabled="disabled" style="display: none">
-    Resume
-  </button>
-</div>
-<div class="result">
-  <div class="loading">
-    Loading...
+<div class="monitoring">
+  <div class="toolbar">
+    <div class="toolbar-logo">
+      Buzzitor
+    </div>
+    <div class="toolbar-auth">
+      Login
+    </div>
+    <div class="toolbar-controls">
+      <div class="toolbar-address">
+        <a href="<%= @context.url %>" target="_blank">
+          <%= @context.url %>
+          <%= fa_icon('external-link') %>
+        </a>
+      </div>
+      <div>
+        <form class="pull-left"
+          action="<%= monitoring_context_path(@context) %>"
+          data-remote="true"
+          method="put">
+          <button id="pause" disabled="disabled" name="monitoring_context[active]" value="0">
+            <%= fa_icon('pause') %> Pause
+          </button>
+          <button id="resume" disabled="disabled" name="monitoring_context[active]" value="1" style="display: none">
+            <%= fa_icon('play') %> Resume
+          </button>
+        </form>
+        <button id="delete" disabled="disabled">
+          <%= fa_icon('trash') %> Delete
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="result">
+    <div class="loading">
+      Loading...
+    </div>
+    <iframe class="content" style="display: none"></iframe>
   </div>
 </div>
 <script>

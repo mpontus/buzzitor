@@ -49,6 +49,12 @@ gem 'active_model_serializers'
 # Validate URLs before accepting them for monitoring
 gem "validate_url"
 
+# Bootstrap stylesheets
+gem 'bootstrap-sass', '~> 3.3.6'
+
+# FontAwesome stylesheets
+gem 'font-awesome-rails'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri

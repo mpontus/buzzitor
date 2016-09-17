@@ -35,31 +35,11 @@
         $('.monitoring .result').css('height', windowHeight - toolbarHeight);
     },
     init: function (id) {
+      $(window).resize(this.updateResultHeight);
+      $(document).ready(this.updateResultHeight);
       var sub = App.cable.subscriptions.create(
         { channel: 'MonitoringChannel', id: id }
       );
-      $(window).resize(this.updateResultHeight);
-      $(document).ready(this.updateResultHeight);
-      // $('#pause').click(function (e) {
-      //   e.preventDefault();
-      //   $.post(Routes.monitoring_context_path(id), {
-      //     '_method': 'put',
-      //     'monitoring_context': {
-      //       'active': false,
-      //     }
-      //   });
-      //   $(this).attr('disabled', 'disalbed');
-      // });
-      // $('#resume').click(function (e) {
-      //   e.preventDefault();
-      //   $.post(Routes.monitoring_context_path(id), {
-      //     '_method': 'put',
-      //     'monitoring_context': {
-      //       'active': true,
-      //     },
-      //   });
-      //   $(this).attr('disabled', 'disalbed');
-      // });
       sub.received = function(data) {
         $('#pause, #resume').attr('disabled', null);
         $('#pause').toggle(data.active);

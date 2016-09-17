@@ -1,6 +1,6 @@
 class Monitoring::Context < ApplicationRecord
-  has_many :results
-  has_many :subscribers
+  has_many :results, dependent: :destroy
+  has_many :subscribers, dependent: :destroy
 
   validates :url, url: true
 

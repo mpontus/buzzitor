@@ -37,6 +37,9 @@
     init: function (id) {
       $(window).resize(this.updateResultHeight);
       $(document).ready(this.updateResultHeight);
+      $('#delete_form').on('ajax:complete', function () {
+        window.location = Routes.root_path();
+      });
       var sub = App.cable.subscriptions.create(
         { channel: 'MonitoringChannel', id: id }
       );

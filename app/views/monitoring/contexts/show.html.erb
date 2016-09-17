@@ -14,7 +14,8 @@
         </a>
       </div>
       <div>
-        <form class="pull-left"
+        <form id="pause_form"
+          class="pull-left"
           action="<%= monitoring_context_path(@context) %>"
           data-remote="true"
           method="put">
@@ -25,9 +26,15 @@
             <%= fa_icon('play') %> Resume
           </button>
         </form>
-        <button id="delete" disabled="disabled">
-          <%= fa_icon('trash') %> Delete
-        </button>
+        <form id="delete_form"
+          class="pull-left"
+          action="<%= monitoring_context_path(@context) %>"
+          data-remote="true"
+          method="delete">
+          <button type="submit">
+            <%= fa_icon('trash') %> Delete
+          </button>
+        </form>
       </div>
     </div>
   </div>

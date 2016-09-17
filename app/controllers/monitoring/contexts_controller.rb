@@ -1,5 +1,5 @@
 class Monitoring::ContextsController < ApplicationController
-  before_action :set_context, only: [:show, :update]
+  before_action :set_context, only: [:show, :update, :destroy]
 
   # GET /monitorings/1
   # GET /monitorings/1.json

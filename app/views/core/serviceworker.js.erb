@@ -17,7 +17,7 @@ self.addEventListener('notificationclick', function(event) {
   console.log(event.notification);
   event.waitUntil(
     self.registration.pushManager.getSubscription().then(function(subscription) {
-      var targetUrl = '/monitoring/contexts/' + event.notification.tag;
+      var targetUrl = '/' + event.notification.tag;
       return clients.openWindow(targetUrl);
     })
   );

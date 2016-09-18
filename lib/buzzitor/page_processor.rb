@@ -29,7 +29,7 @@ class Buzzitor::PageProcessor
       # Proxy assets through our redirect
       for attr in ['src', 'href'] do
         document.xpath("//head[1]//*[@#{attr}]").each do |element|
-          element[attr] = redirect_url(to: element[attr])
+          element[attr] = proxy_url(to: element[attr])
         end
       end
 

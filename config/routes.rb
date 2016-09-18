@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   root 'monitoring/contexts#new'
-  get '/redirect',      to: 'core#redirect', as: 'redirect'
+  get '/proxy',         to: 'core#proxy', as: 'proxy'
   get '/serviceworker', to: 'core#serviceworker'
   get '/manifest',      to: 'core#manifest'
   namespace :monitoring, path: nil, shallow: true do

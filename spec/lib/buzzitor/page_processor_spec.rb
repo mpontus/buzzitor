@@ -75,6 +75,6 @@ RSpec.describe Buzzitor::PageProcessor do
         <link rel="stylesheet" href="http://example.org/somestylesheet">
       </head>
     HTML
-    expect(result).to include('redirect?to=')
+    expect(result).to include('proxy?to=')
   end
 end

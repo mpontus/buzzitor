@@ -6,9 +6,9 @@ class CoreController < ApplicationController
   def homepage
   end
 
-  def redirect
+  def proxy
     if params[:to]
-      redirect_to params[:to]
+      self.response_body = Net:HTTP.get(URI(params[:to]))
     else
       redirect_to root_url
     end

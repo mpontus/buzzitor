@@ -8,7 +8,7 @@ class CoreController < ApplicationController
 
   def proxy
     if params[:to]
-      self.response_body = Net:HTTP.get(URI(params[:to]))
+      render inline: URI.parse(params[:to]).read, content_type: 'text/css'
     else
       redirect_to root_url
     end

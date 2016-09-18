@@ -69,7 +69,7 @@ RSpec.describe Buzzitor::PageProcessor do
     expect(result).to include('#%7Bbar:%20baz%7D')
   end
 
-  it "proxies addresses in 'head' through our redirect", :focus do
+  it "proxies page stylesheets through our origin" do
     result = subject.call <<-HTML
       <head>
         <link rel="stylesheet" href="http://example.org/somestylesheet">

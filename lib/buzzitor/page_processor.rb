@@ -26,11 +26,9 @@ class Buzzitor::PageProcessor
         element['target'] = '_blank'
       end
 
-      # Proxy assets through our redirect
-      for attr in ['src', 'href'] do
-        document.xpath("//head[1]//*[@#{attr}]").each do |element|
-          element[attr] = proxy_url(to: element[attr])
-        end
+      # Proxy stylesheet assets through our origin
+      document.xpath("//head[1]/link[@rel='stylesheet']").each do |element|
+        element['href'] = proxy_url(to: element['href'])
       end
 
       document.to_html

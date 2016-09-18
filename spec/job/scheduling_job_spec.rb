@@ -23,13 +23,13 @@ describe SchedulingJob do
 
     expect {
       SchedulingJob.perform_now
-    }.not_to have_enqueued_job
+    }.not_to change(@context, :fetched_at)
 
     interval = APP_CONFIG['fetch_interval'] || 60
     Timecop.travel(interval.seconds.from_now) do
       expect {
         SchedulingJob.perform_now
-      }.to have_enqueued_job(FetchJob).with(@context)
+      }.to change(@context.reload, :fetched_at)
     end
   end
 end

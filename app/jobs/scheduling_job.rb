@@ -14,7 +14,7 @@ class SchedulingJob < ApplicationJob
              { before: interval.seconds.ago })
       .order(fetched_at: :asc).limit(1)
       .each do |context|
-      FetchJob.perform_later(context)
+      FetchJob.perform_now(context)
     end
   end
 end

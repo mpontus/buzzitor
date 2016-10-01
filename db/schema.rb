@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 20160813120236) do
 
   create_table "monitoring_contexts", force: :cascade do |t|
     t.string   "url"
-    t.boolean  "active",     default: true
+    t.boolean  "active",     default: true, null: false
     t.datetime "visited_at"
     t.datetime "fetched_at"
     t.datetime "created_at",                null: false

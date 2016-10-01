@@ -24,11 +24,20 @@ gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+# Serialize models for transmitting through ActionCable
+gem 'active_model_serializers'
+
 # Use Rufus Scheduler for periodic updates
 gem "rufus-scheduler"
 
 # Use WebPush to send Push Notifications
 gem 'webpush'
+
+# Bootstrap stylesheets
+gem 'bootstrap-sass', '~> 3.3.6'
+
+# FontAwesome stylesheets
+gem 'font-awesome-rails'
 
 # Export routes to javascript
 gem 'js-routes'
@@ -43,24 +52,12 @@ gem 'carrierwave', '>= 1.0.0.beta', '< 2.0'
 # URL rewriting / normalization
 gem 'addressable'
 
-# Build JSON API
-gem 'active_model_serializers'
-
 # Validate URLs before accepting them for monitoring
 gem "validate_url"
-
-# Bootstrap stylesheets
-gem 'bootstrap-sass', '~> 3.3.6'
-
-# FontAwesome stylesheets
-gem 'font-awesome-rails'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-
-  # Load environment variables
-  gem 'dotenv-rails'
 
   # Use rspec for BDD
   gem 'rspec-rails'
@@ -71,20 +68,10 @@ group :development, :test do
   # Use capybara for integration testing
   gem 'capybara'
 
-  # Mock web requests
+  # Set up expectations on GCM servcies
   gem 'webmock'
 
-  # Use Selenium to execute client-side javascript during development
-  gem 'selenium-webdriver'
-
-  # Use PhantomJS to execute client-side javascript
-  # gem 'poltergeist'
-  # gem 'phantomjs', require: 'phantomjs/poltergeist'
-
-  # Use Chrome as non-headless alternative javascript engine
-  gem 'chromedriver-helper'
-
-  # Use sinatra to mock external websites
+  # Use sinatra to mock external resources
   gem 'sinatra', git: "https://github.com/sinatra/sinatra"
 
   # Use timecop to test time-dependent code
@@ -92,6 +79,15 @@ group :development, :test do
 
   # Test json responses
   gem 'api_matchers'
+
+  # Use database cleaner instead of transactional fixtures
+  gem 'database_cleaner'
+
+  # Use Selenium to execute client-side javascript during development
+  gem 'selenium-webdriver'
+
+  # Use Chrome as non-headless alternative javascript engine
+  gem 'chromedriver-helper'
 end
 
 group :development do

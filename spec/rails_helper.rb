@@ -35,6 +35,26 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
+  config.before(:suite) do
+    DatabaseCleaner.clean_with :truncation
+  end
+
+  # Since we don't use transactional fixtures we need to manually clean the
+  # database before every test
+  config.before(:each) do
+    if self.class.metadata[:js]
+      byebug
+      DatabaseCleaner.strategy = :truncation
+    else
+      DatabaseCleaner.strategy = :transaction
+    end
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+  end
+
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
   # `post` in specs under `spec/controllers`.

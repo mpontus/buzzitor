@@ -44,7 +44,6 @@ gem 'js-routes'
 
 # Use phantomjs to fetch remote pages
 gem 'poltergeist'
-gem 'phantomjs', require: 'phantomjs/poltergeist'
 
 # Use Carrierwave to save fetched page content and thumbnail
 gem 'carrierwave', '>= 1.0.0.beta', '< 2.0'

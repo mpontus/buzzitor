@@ -27,5 +27,7 @@ class Monitoring::Subscriber < ApplicationRecord
       api_key: ENV['BUZZITOR_GCM_PUBLIC_API_KEY']
     }
     Webpush.payload_send(params)
+  rescue Webpush::InvalidSubscription
+    destroy()
   end
 end

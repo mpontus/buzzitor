@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/serviceworker', to: 'core#serviceworker'
   get '/manifest',      to: 'core#manifest'
   namespace :monitoring, path: nil, shallow: true do
+    resources :notifications, only: [:index]
     resources :contexts, path: '/'  do
       resources :subscribers, only: [:create]
       # member do

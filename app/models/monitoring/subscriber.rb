@@ -14,16 +14,18 @@ class Monitoring::Subscriber < ApplicationRecord
   end
 
   def notify(body)
+    Monitoring::Notification.create!(
+        context: context,
+        endpoint: endpoint,
+        title: context.results.last.title,
+        body: body,
+        icon: context.results.last.thumbnail.url
+    )
+
     params = {
       endpoint: endpoint,
       auth: keys["auth"],
       p256dh: keys["p256dh"],
-      message: {
-        id: context.id,
-        title: context.results.last.title,
-        body: body,
-        icon: context.results.last.thumbnail.url
-      }.to_json,
       api_key: ENV['BUZZITOR_GCM_PUBLIC_API_KEY']
     }
     Webpush.payload_send(params)

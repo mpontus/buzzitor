@@ -1,15 +1,25 @@
 self.addEventListener('push', function(event) {
-  console.log("Received notification!");
-  var data = event.data.json();
-  options = {
-    body: data.body,
-    tag: data.id
-  };
-  if (data.hasOwnProperty('icon')) {
-    options.icon = data.icon;
-  }
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    self.registration.pushManager.getSubscription().then(function(subscription) {
+      var notificationsUrl = '/notifications?endpoint=' + encodeURIComponent(subscription.endpoint);
+      var headers = new Headers();
+      headers.append('Accept', 'application/json');
+      return fetch(notificationsUrl, {
+        headers: headers
+      });
+    }).then(function(response) {
+      return response.json();
+    }).then(function(notifications) {
+      return Promise.all(
+        notifications.map(function(notification) {
+          self.registration.showNotification(notification.title, {
+            tag: notification.tag,
+            body: notification.body,
+            icon: notification.icon
+          })
+        })
+      )
+    })
   );
 });
 self.addEventListener('notificationclick', function(event) {

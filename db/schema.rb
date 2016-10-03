@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160813120236) do
+ActiveRecord::Schema.define(version: 20161003092957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,18 @@ ActiveRecord::Schema.define(version: 20160813120236) do
     t.datetime "fetched_at"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
+  end
+
+  create_table "monitoring_notifications", force: :cascade do |t|
+    t.integer  "context_id"
+    t.string   "endpoint"
+    t.boolean  "fetched",    default: false, null: false
+    t.string   "title"
+    t.string   "body"
+    t.string   "icon"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["context_id"], name: "index_monitoring_notifications_on_context_id", using: :btree
   end
 
   create_table "monitoring_results", force: :cascade do |t|
@@ -43,6 +55,7 @@ ActiveRecord::Schema.define(version: 20160813120236) do
     t.index ["context_id"], name: "index_monitoring_subscribers_on_context_id", using: :btree
   end
 
+  add_foreign_key "monitoring_notifications", "monitoring_contexts", column: "context_id"
   add_foreign_key "monitoring_results", "monitoring_contexts", column: "context_id"
   add_foreign_key "monitoring_subscribers", "monitoring_contexts", column: "context_id"
 end

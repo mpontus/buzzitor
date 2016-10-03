@@ -48,6 +48,9 @@ gem 'poltergeist'
 # Use Carrierwave to save fetched page content and thumbnail
 gem 'carrierwave', '>= 1.0.0.beta', '< 2.0'
 
+# Resize thumbnails
+gem 'mini_magick', '3.8.0'
+
 # URL rewriting / normalization
 gem 'addressable'
 

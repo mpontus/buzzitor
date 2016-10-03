@@ -1,6 +1,8 @@
 # encoding: utf-8
 
 class ThumbnailUploader < CarrierWave::Uploader::Base
+  include CarrierWave::MiniMagick
+  process resize_to_limit: [80, 80]
 
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick

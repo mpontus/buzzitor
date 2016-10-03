@@ -25,7 +25,7 @@
 .byebug_history
 
 # Ignore sensitive information
-/.env
+/.rbenv-vars
 
 # Ingore node_modules
 /node_modules

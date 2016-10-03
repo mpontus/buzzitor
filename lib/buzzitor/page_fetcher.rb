@@ -12,8 +12,8 @@ class Buzzitor::PageFetcher
       driver.visit(url)
       sleep APP_CONFIG['page_fetcher_delay'] || 0;
       yield driver
-    # ensure
-    #   driver.quit
+    ensure
+      driver.quit
     end
   end
 end

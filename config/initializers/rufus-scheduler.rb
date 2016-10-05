@@ -8,4 +8,11 @@ if Rails.env != 'test'
       SchedulingJob.perform_now
     end
   end
+
+  scheduler.every '5s', overlap: false do
+    ActiveRecord::Base.connection_pool.with_connection do
+      DeactivatingJob.perform_now
+    end
+  end
+
 end
